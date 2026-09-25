@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AnimatedCard } from "./components/AnimatedCard";
 
 export default function HomePage() {
   return (
@@ -23,30 +24,18 @@ export default function HomePage() {
           タスク概要
         </h2>
         <div className="flex flex-col md:flex-row gap-6">
-          <div className="flex-1 bg-white border border-gray-200 rounded-lg p-6 hover:border-brand-500 transition-colors">
-            <h3 className="text-lg font-bold text-brand-700 mb-2">Web開発</h3>
-            <p className="text-gray-600 text-sm">
-              React・Next.jsを活用した高品質なWebアプリケーション開発
-            </p>
-          </div>
-
-          <div className="flex-1 bg-white border border-gray-200 rounded-lg p-6 hover:border-brand-500 transition-colors">
-            <h3 className="text-lg font-bold text-brand-700 mb-2">
-              コンサルティング
-            </h3>
-            <p className="text-gray-600 text-sm">
-              ビジネス課題を分析し、最適なIT戦略をご提案
-            </p>
-          </div>
-
-          <div className="flex-1 bg-white border border-gray-200 rounded-lg p-6 hover:border-brand-500 transition-colors">
-            <h3 className="text-lg font-bold text-brand-700 mb-2">
-              インフラ構築
-            </h3>
-            <p className="text-gray-600 text-sm">
-              クラウドサービスを活用したスケーラブルなインフラ構築
-            </p>
-          </div>
+          <AnimatedCard
+            title="Web開発"
+            description="React・Next.jsを活用した高品質なWebアプリケーション開発"
+          />
+          <AnimatedCard
+            title="コンサルティング"
+            description="ビジネス課題を分析し、最適なIT戦略をご提案"
+          />
+          <AnimatedCard
+            title="インフラ構築"
+            description="クラウドサービスを活用したスケーラブルなインフラ構築"
+          />
         </div>
       </section>
     </div>
