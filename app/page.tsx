@@ -1,43 +1,191 @@
-import Link from "next/link";
-import { AnimatedCard } from "./components/AnimatedCard";
+"use client";
 
-export default function HomePage() {
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/components/ui/table";
+
+type User = {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  status: string;
+};
+
+const users: User[] = [
+  {
+    id: 1,
+    name: "山田太郎",
+    email: "taro@example.com",
+    role: "エンジニア",
+    status: "アクティブ",
+  },
+  {
+    id: 2,
+    name: "鈴木花子",
+    email: "hanako@example.com",
+    role: "デザイナー",
+    status: "アクティブ",
+  },
+  {
+    id: 3,
+    name: "佐藤次郎",
+    email: "jiro@example.com",
+    role: "マネージャー",
+    status: "アクティブ",
+  },
+  {
+    id: 4,
+    name: "田中美咲",
+    email: "misaki@example.com",
+    role: "エンジニア",
+    status: "休止中",
+  },
+  {
+    id: 5,
+    name: "高橋健一",
+    email: "kenichi@example.com",
+    role: "デザイナー",
+    status: "アクティブ",
+  },
+];
+
+export default function Home() {
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* ヒーロー：カスタムカラーを使用 */}
-      <section className="bg-brand-900 text-white text-center px-4 py-16 md:py-24">
-        <h2 className="text-2xl md:text-4xl font-bold mb-4">ダッシュボード</h2>
-        <p className="text-brand-100 text-sm md:text-base max-w-xl mx-auto mb-6">
-          タスクを効率的に管理して、チームの生産性を向上させましょう。
-        </p>
-        <Link
-          href="/tasks/new"
-          className="inline-block bg-accent text-white font-bold px-6 py-3 rounded hover:bg-amber-600"
-        >
-          新しいタスクを作成
-        </Link>
-      </section>
-
-      {/* サービスカード */}
-      <section className="max-w-4xl mx-auto px-4 py-12">
-        <h2 className="text-xl md:text-2xl font-bold text-center mb-8">
-          タスク概要
-        </h2>
-        <div className="flex flex-col md:flex-row gap-6">
-          <AnimatedCard
-            title="Web開発"
-            description="React・Next.jsを活用した高品質なWebアプリケーション開発"
-          />
-          <AnimatedCard
-            title="コンサルティング"
-            description="ビジネス課題を分析し、最適なIT戦略をご提案"
-          />
-          <AnimatedCard
-            title="インフラ構築"
-            description="クラウドサービスを活用したスケーラブルなインフラ構築"
-          />
+    <div className="p-6">
+      {/* ページヘッダー */}
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h1 className="text-2xl font-bold">ユーザー管理</h1>
+          <p className="text-muted-foreground">登録ユーザーの一覧と管理</p>
         </div>
-      </section>
+        <Button>新規追加</Button>
+      </div>
+
+      {/* ユーザー一覧 */}
+      <Card>
+        <CardHeader>
+          <CardTitle>ユーザー一覧</CardTitle>
+          <CardDescription>全{users.length}件のユーザー</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>名前</TableHead>
+                <TableHead>メール</TableHead>
+                <TableHead>役職</TableHead>
+                <TableHead>ステータス</TableHead>
+                <TableHead className="text-right">操作</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {users.map((user) => (
+                <TableRow key={user.id}>
+                  <TableCell className="font-medium">{user.name}</TableCell>
+                  <TableCell>{user.email}</TableCell>
+                  <TableCell>{user.role}</TableCell>
+                  <TableCell>
+                    <span
+                      className={
+                        user.status === "アクティブ"
+                          ? "text-green-600"
+                          : "text-muted-foreground"
+                      }
+                    >
+                      {user.status}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setSelectedUser(user)}
+                    >
+                      詳細
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+
+      {/* ユーザー詳細ダイアログ */}
+      <Dialog
+        open={selectedUser !== null}
+        onOpenChange={(open) => {
+          if (!open) setSelectedUser(null);
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>ユーザー詳細</DialogTitle>
+            <DialogDescription>ユーザー情報の確認と編集</DialogDescription>
+          </DialogHeader>
+          {selectedUser && (
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="detail-name">名前</Label>
+                <Input id="detail-name" defaultValue={selectedUser.name} />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="detail-email">メールアドレス</Label>
+                <Input id="detail-email" defaultValue={selectedUser.email} />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="detail-role">役職</Label>
+                <Input id="detail-role" defaultValue={selectedUser.role} />
+              </div>
+              <div className="space-y-2">
+                <Label>ステータス</Label>
+                <p
+                  className={
+                    selectedUser.status === "アクティブ"
+                      ? "text-green-600 font-medium"
+                      : "text-muted-foreground"
+                  }
+                >
+                  {selectedUser.status}
+                </p>
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setSelectedUser(null)}>
+              閉じる
+            </Button>
+            <Button>保存</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
