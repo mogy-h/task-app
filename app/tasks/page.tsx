@@ -1,5 +1,6 @@
 // app/tasks/page.tsx
 import type { Task } from "@/lib/types";
+import { CreateTaskDialog } from "@/components/tasks/create-task-dialog";
 
 async function getTasks(): Promise<Task[]> {
   const res = await fetch("http://localhost:3000/api/tasks", {
@@ -21,7 +22,7 @@ export default async function TasksPage() {
   return (
     <main className="p-8 max-w-2xl mx-auto">
       <h1 className="text-2xl font-bold mb-6">タスク一覧</h1>
-
+      <CreateTaskDialog />
       {tasks.length === 0 ? (
         <p className="text-gray-500">タスクがありません</p>
       ) : (
